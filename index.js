@@ -34,7 +34,7 @@ app.post('/api/shorturl',(req,res)=>{
   
     dns.lookup(hostname, (err, address, family) => {
             if (err) {
-              return res.status(400).json({error: 'invalid url'})
+              return res.json({error: 'invalid url'})
             } else {
              const  key = 'key_' + new Date().getTime()
              const  value =  hostname
@@ -47,7 +47,7 @@ app.post('/api/shorturl',(req,res)=>{
 
    }catch(error){
 
-       res.status(400).json({error: 'invalid url'})
+       resjson({error: 'invalid url'})
        console.log(error)
 
    }
