@@ -40,7 +40,7 @@ app.post('/api/shorturl',(req,res)=>{
              const  value =  hostname
              urlDb[key] = value
             
-              res.json({original_url:url,short_url:key,urlDb})
+              res.json({original_url:url,short_url:key})
   
             }
           });
