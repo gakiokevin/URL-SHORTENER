@@ -47,7 +47,7 @@ app.post('/api/shorturl',(req,res)=>{
 
    }catch(error){
 
-       resjson({error: 'invalid url'})
+       res.json({error: 'invalid url'})
        console.log(error)
 
    }
