@@ -18,7 +18,7 @@ let urlDb = {}
 app.get('/',(req,res)=>{
 
 
-  res.render('index.pug')
+return  res.render('index.pug')
 })
 
 
@@ -40,14 +40,14 @@ app.post('/api/shorturl',(req,res)=>{
              const  value =  hostname
              urlDb[key] = url
             
-              res.json({original_url:url,short_url:key})
+              return res.json({original_url:url,short_url:key})
   
             }
           });
 
    }catch(error){
 
-       res.json({error: 'invalid url'})
+      return  res.json({error: 'invalid url'})
        console.log(error)
 
    }
@@ -58,9 +58,9 @@ app.get('/api/shorturl/:short_url',(req,res)=>{
 
   if (urlDb.hasOwnProperty(Number(short_url))) {
     let original = urlDb[short_url];
-    res.redirect(original)
+   return  res.redirect(original)
   }else {
- res.json({error: 'invalid url'})
+ return res.json({error: 'invalid url'})
   }
 })
 
