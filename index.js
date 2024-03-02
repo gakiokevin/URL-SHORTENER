@@ -36,7 +36,7 @@ app.post('/api/shorturl',(req,res)=>{
             if (err) {
               return res.json({error: 'invalid url'})
             } else {
-             const  key = 'key_' + new Date().getTime()
+             const  key = Math.floor(Math.random() * 100000) 
              const  value =  hostname
              urlDb[key] = value
             
@@ -56,11 +56,11 @@ app.post('/api/shorturl',(req,res)=>{
 app.get('/api/shorturl/:short_url',(req,res)=>{
   const short_url = req.params.short_url;
 
-  if (urlDb.hasOwnProperty(short_url)) {
+  if (urlDb.hasOwnProperty(Number(short_url))) {
     let original = urlDb[short_url];
     res.redirect('https://'+ original)
   }else {
-res.render('404.pug')
+ res.json({error: 'invalid url'})
   }
 })
 
