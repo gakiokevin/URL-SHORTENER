@@ -28,7 +28,7 @@ return  res.render('index.pug')
 app.post('/api/shorturl',(req,res)=>{
   let url = req.body.url
    try{
- const dnslookup = dns.lookup(urlparser.parse(url),hostname,function (err,address)=>{
+ const dnslookup = dns.lookup(urlparser.parse(url),hostname,(err,address)=>{
    if(!address){
        return res.json({error: 'invalid url'})
    }else {
