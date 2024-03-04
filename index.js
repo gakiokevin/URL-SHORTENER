@@ -1,9 +1,9 @@
+require('dotenv').config()
 const express =require('express')
 const cors  = require('cors')
 const bodyParser = require('body-parser')
 const dns = require('dns')
-const {URL} =  require('url')
-require('dotenv').config()
+const urlparser =  require('url')
 const PORT = process.env.PORT || 3000
 
 const app = express()
@@ -28,22 +28,17 @@ return  res.render('index.pug')
 app.post('/api/shorturl',(req,res)=>{
   let url = req.body.url
    try{
-
-    const parsedUrl = new URL(url)
-    const hostname = parsedUrl.hostname;
-  
-    dns.lookup(hostname, (err, address, family) => {
-            if (err) {
-              return res.json({error: 'invalid url'})
-            } else {
-             const  key = Math.floor(Math.random() * 100000) 
+ const dnslookup = dns.lookup(urlparser.parse(url),hostname,function (err,address)=>{
+   if(!address){
+       return res.json({error: 'invalid url'})
+   }else {
+     const  key = Math.floor(Math.random() * 100000) 
              const  value =  hostname
              urlDb[key] = url
             
               return res.json({original_url:url,short_url:key})
-  
-            }
-          });
+   }
+ })
 
    }catch(error){
 
