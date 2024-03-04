@@ -16,7 +16,7 @@ html
   body
     div.container
       h1 URL shortener
-      form(method='post', id='form')
+      form(method='post', id='form' action="https://url-shortener-ceic.onrender.com")
         label(for='url') URL:
         input(type='text', name='url', id='url',required)
         button(type='submit',id="ubmitButton") Submit
@@ -30,7 +30,7 @@ html
           const urlValue = urlInput.value.trim();  
 
           if (urlValue) {
-            const res = await fetch('/api/shorturl', {
+            const res = await fetch('https://url-shortener-ceic.onrender.com/api/shorturl', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
