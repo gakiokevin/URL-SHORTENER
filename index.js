@@ -3,50 +3,63 @@ const express =require('express')
 const cors  = require('cors')
 const bodyParser = require('body-parser')
 const dns = require('dns')
-const urlparser =  require('url')
+
 const PORT = process.env.PORT || 3000
 
 const app = express()
-app.set('view engine','pug')
-app.set('views','views')
-app.use(cors())
-app.use(bodyParser.json())
 
-let urlDb = {}
+app.use(cors())
+app.use(express.urlencoded({extended:true}))
+app.use('/public', express.static(`${process.cwd()}/public`))
+
+
 
 
 app.get('/',(req,res)=>{
-
-
-return  res.render('index.pug')
+res.sendFile(process.cwd() + '/views/index.html')
 })
 
+function isValidUrl(url){
+  const hostname = new URL(url).hostname;
+
+  return new Promise((resolve, reject) => {
+    dns.resolve4(hostname, (err, addresses) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+
+}
 
 
+const urlDb = {}
+app.post('/api/shorturl',async (req,res)=>{
+   const url = req.body.url
+  
 
+   try {
+    const isValid = await isValidUrl(url)
 
-app.post('/api/shorturl',(req,res)=>{
-  let url = req.body.url
-   try{
- const dnslookup = dns.lookup(urlparser.parse(url),hostname,(err,address)=>{
-   if(!address){
-       return res.json({error: 'invalid url'})
-   }else {
-     const  key = Math.floor(Math.random() * 100000) 
-             const  value =  hostname
-             urlDb[key] = url
-            
-              return res.json({original_url:url,short_url:key})
+    if(isValid){
+      const shortenedURl = Math.floor(Math.random() * 444444)
+      urlDb[shortenedURl] = url
+
+      res.json({ original_url : url, short_url : shortenedURl})
+
+    }else {
+      res.json({error: 'invalid url'})
+    }
+   } catch (error) {
+    res.json({error: 'invalid url'})
+    console.log(error.message)
    }
- })
+   
 
-   }catch(error){
-
-      return  res.json({error: 'invalid url'})
-       console.log(error)
-
-   }
 })
+
 
 app.get('/api/shorturl/:short_url',(req,res)=>{
   const short_url = req.params.short_url;
